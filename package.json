@@ -1,0 +1,23 @@
+{
+  "author": {
+    "name": "sui4",
+    "url": "https://github.com/sui4"
+  },
+  "dependencies": {
+    "com.vrmc.gltf": "0.120.0",
+    "com.vrmc.univrm": "0.120.0",
+    "com.vrmc.vrm": "0.120.0"
+  },
+  "description": "Timeline Extension for VRM1.0 Expression",
+  "displayName": "VRMExpressionExtension",
+  "keywords": [
+    "Unity",
+    "VRM"
+  ],
+  "license": "MIT",
+  "name": "jp.sui4.vrmexpressionextension",
+  "repository": "github:sui4/VRMExpressionExtensionForUnity",
+  "unity": "2022.3",
+  "version": "0.1.0",
+  "type": "tool"
+}
