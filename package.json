@@ -4,8 +4,6 @@
     "url": "https://github.com/sui4"
   },
   "dependencies": {
-    "com.vrmc.gltf": "0.120.0",
-    "com.vrmc.univrm": "0.120.0",
     "com.vrmc.vrm": "0.120.0"
   },
   "description": "Timeline Extension for VRM1.0 Expression",
