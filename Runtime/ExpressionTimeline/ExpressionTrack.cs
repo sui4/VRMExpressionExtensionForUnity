@@ -14,9 +14,12 @@ namespace VrmExpressionExtension
     {
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
-            ScriptPlayable<ExpressionMixerBehaviour> mixer = ScriptPlayable<ExpressionMixerBehaviour>.Create(graph, inputCount);
-            
-            var bindingVrmInstance = GetBindingComponent<Vrm10Instance>(this, go);
+            ScriptPlayable<ExpressionMixerBehaviour> mixer =
+                ScriptPlayable<ExpressionMixerBehaviour>.Create(graph, inputCount);
+
+            ExpressionTrack baseTrack = parent.GetType() == typeof(ExpressionTrack) ? parent as ExpressionTrack : this;
+
+            var bindingVrmInstance = GetBindingComponent<Vrm10Instance>(baseTrack, go);
             // rename clip to preset name
             foreach (TimelineClip clip in GetClips())
             {
@@ -25,16 +28,18 @@ namespace VrmExpressionExtension
                 if (asset == null || bindingVrmInstance == null) continue;
                 asset.VrmObjectExpression = bindingVrmInstance.Vrm.Expression;
             }
+
             return mixer;
         }
 
         public Playable CreateLayerMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
-            ScriptPlayable<ExpressionLayerMixerBehaviour> mixer = ScriptPlayable<ExpressionLayerMixerBehaviour>.Create(graph, inputCount);
+            ScriptPlayable<ExpressionLayerMixerBehaviour> mixer =
+                ScriptPlayable<ExpressionLayerMixerBehaviour>.Create(graph, inputCount);
             mixer.GetBehaviour().VrmInstance = GetBindingComponent<Vrm10Instance>(this, go);
             return mixer;
         }
-        
+
         private static T GetBindingComponent<T>(TrackAsset asset, GameObject gameObject) where T : class
         {
             if (gameObject == null) return default;
