@@ -30,7 +30,6 @@ namespace VrmExpressionExtension
 
         public Playable CreateLayerMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
-
             ScriptPlayable<ExpressionLayerMixerBehaviour> mixer = ScriptPlayable<ExpressionLayerMixerBehaviour>.Create(graph, inputCount);
             mixer.GetBehaviour().VrmInstance = GetBindingComponent<Vrm10Instance>(this, go);
             return mixer;
