@@ -17,6 +17,8 @@ namespace VrmExpressionExtension
         private int _selectedCustomClipIndex = -1;
         private string[] _customClipNames;
 
+        private bool _hasCustomClip => TargetClip.VrmObjectExpression.CustomClips.Count > 0;
+
         private void OnEnable()
         {
             _template = serializedObject.FindProperty("_template");
@@ -56,6 +58,12 @@ namespace VrmExpressionExtension
                         "No VRM Object Expression found. Please assign a VRM Object Expression to this clip.",
                         MessageType.Error);
                 }
+                else if (!_hasCustomClip)
+                {
+                    EditorGUILayout.HelpBox(
+                        "No custom clips found in the VRM Object Expression. ",
+                        MessageType.Warning);
+                }
                 else
                 {
                     EditorGUI.indentLevel++;
@@ -70,7 +78,7 @@ namespace VrmExpressionExtension
                     if (selected != _selectedCustomClipIndex)
                     {
                         _selectedCustomClipIndex = selected;
-                        OnCustomClipChanged(TargetClip.VrmObjectExpression.CustomClips[selected]);
+                        OnCustomClipChanged(TargetClip.VrmObjectExpression.CustomClips[_selectedCustomClipIndex]);
                     }
 
                     using (new EditorGUI.DisabledScope(true))
