@@ -8,8 +8,8 @@ namespace VrmExpressionExtension
     [System.Serializable]
     public class ExpressionBehaviour : PlayableBehaviour
     {
-        [SerializeField] private ExpressionPreset _preset;
-        [SerializeField, Range(0.0f, 2.0f)] private float _weight;
+        [SerializeField] private ExpressionPreset _preset = ExpressionPreset.neutral;
+        [SerializeField, Range(0.0f, 2.0f)] private float _weight = 1.0f;
         [SerializeField] private VRM10Expression _customExpression;
         public ExpressionPreset Preset => _preset;
         public float Weight => _weight;
