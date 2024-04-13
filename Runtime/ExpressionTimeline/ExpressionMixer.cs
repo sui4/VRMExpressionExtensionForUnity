@@ -12,7 +12,7 @@ namespace VrmExpressionExtension
         {
             var vrmInstance = playerData as Vrm10Instance;
             if (vrmInstance == null) return;
-            
+
             Weight.Clear();
 
             int inputCount = playable.GetInputCount();
@@ -23,7 +23,10 @@ namespace VrmExpressionExtension
                 ExpressionBehaviour behaviour = inputPlayable.GetBehaviour();
                 if (inputWeight > 0f && behaviour.Weight > 0f)
                 {
-                    string label = behaviour.Preset == ExpressionPreset.custom ? behaviour.CustomExpression.name : null;
+                    bool isCustom = behaviour.Preset == ExpressionPreset.custom;
+                    if (isCustom && behaviour.CustomExpression == null) continue;
+
+                    string label = isCustom ? behaviour.CustomExpression.name : null;
                     var key = new ExpressionKey(behaviour.Preset, label);
                     if (Weight.TryGetValue(key, out float curWeight))
                     {
@@ -33,7 +36,6 @@ namespace VrmExpressionExtension
                     {
                         Weight.Add(key, behaviour.Weight * inputWeight);
                     }
-
                 }
             }
         }

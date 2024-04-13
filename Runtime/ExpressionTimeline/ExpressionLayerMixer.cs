@@ -39,6 +39,7 @@ namespace VrmExpressionExtension
 
             var presets = (ExpressionPreset[])System.Enum.GetValues(typeof(ExpressionPreset));
 
+            // 未使用のキーのWeightを0にするために全てのキーを処理
             foreach (ExpressionPreset preset in presets)
             {
                 if (preset == ExpressionPreset.custom) continue;
