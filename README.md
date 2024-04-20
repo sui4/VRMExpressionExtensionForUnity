@@ -31,13 +31,13 @@ The Custom VRM1.0 Expression Track for Unity Timeline enhances facial animation 
 
 You can install this package directly using Unity's Package Manager. Simply go to **Add package from git URL...** and enter the following URL:
 
-```http
+```
 https://github.com/sui4/VRMExpressionExtensionForUnity.git
 ```
 
 To specify a particular tag or branch, append `#{tag,branch}` to the URL like so:
 
-```http
+```
 https://github.com/sui4/VRMExpressionExtensionForUnity.git#{tag,branch}
 ```
 
