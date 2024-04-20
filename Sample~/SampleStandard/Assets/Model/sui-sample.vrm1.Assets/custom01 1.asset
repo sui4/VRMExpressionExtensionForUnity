@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c8b2024ae0d0944eb878d90212bf21b, type: 3}
-  m_Name: custom01
+  m_Name: custom01 1
   m_EditorClassIdentifier: 
   m_prefab: {fileID: -1728013695380148634, guid: d4a8bdb637ad342408783591640ed78e, type: 3}
   MorphTargetBindings:
   - RelativePath: Face
     Index: 9
     Weight: 0.808
+  - RelativePath: Face
+    Index: 13
+    Weight: 0.799
   - RelativePath: Face
     Index: 16
     Weight: 1

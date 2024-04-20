@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88684271e27adb843b6570957c9e7637, type: 3}
-  m_Name: _vrm1_
+  m_Name: _vrm1_NoCustomClip
   m_EditorClassIdentifier: 
   m_prefab: {fileID: -1728013695380148634, guid: d4a8bdb637ad342408783591640ed78e, type: 3}
   Meta:
@@ -52,9 +52,7 @@ MonoBehaviour:
     LookLeft: {fileID: 11400000, guid: a7f4bf95a602bfd4ba9ca73210fd3cf4, type: 2}
     LookRight: {fileID: 11400000, guid: 2d5fdb30c8fc398428ee24ada374b5be, type: 2}
     Neutral: {fileID: 11400000, guid: 3b3eae3cac7ac0c47b206d495e21dc76, type: 2}
-    CustomClips:
-    - {fileID: 11400000, guid: e5b95730f9763d44d9ab508da121561d, type: 2}
-    - {fileID: 11400000, guid: 9f9ce7ae9461542418fdf23c61a0376e, type: 2}
+    CustomClips: []
   LookAt:
     OffsetFromHead: {x: -0, y: 0.06, z: 0}
     LookAtType: 0
