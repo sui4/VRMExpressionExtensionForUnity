@@ -64,6 +64,8 @@ namespace VrmExpressionExtension
 
         public override void OnPlayableDestroy(Playable playable)
         {
+            if (VrmInstance == null) return;
+
             var presets = (ExpressionPreset[])System.Enum.GetValues(typeof(ExpressionPreset));
 
             foreach (ExpressionPreset preset in presets)
@@ -73,16 +75,18 @@ namespace VrmExpressionExtension
                 var key = new ExpressionKey(preset);
                 VrmInstance.Runtime.Expression.SetWeight(key, 0f);
             }
+
             VrmInstance.Vrm.Expression.CustomClips.ForEach(clip =>
             {
                 var key = new ExpressionKey(ExpressionPreset.custom, clip.name);
                 VrmInstance.Runtime.Expression.SetWeight(key, 0f);
             });
-            
+
             if (!Application.isPlaying)
             {
                 VrmInstance.Runtime.Process();
             }
+
             base.OnPlayableDestroy(playable);
         }
     }

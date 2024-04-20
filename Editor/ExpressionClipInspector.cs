@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UniVRM10;
@@ -16,8 +17,9 @@ namespace VrmExpressionExtension
 
         private int _selectedCustomClipIndex = -1;
         private string[] _customClipNames;
+        private List<string> _warnings = new List<string>();
 
-        private bool _hasCustomClip => TargetClip.VrmObjectExpression.CustomClips.Count > 0;
+        private bool HasCustomClip => TargetClip.VrmObjectExpression.CustomClips.Count > 0;
 
         private void OnEnable()
         {
@@ -26,9 +28,10 @@ namespace VrmExpressionExtension
             _weight = _template.FindPropertyRelative("_weight");
             _customExpression = _template.FindPropertyRelative("_customExpression");
 
-            if (TargetClip._template.Preset == ExpressionPreset.custom)
+            _warnings.Clear();
+            if (TargetClip._template.Preset == ExpressionPreset.custom && TargetClip._template.CustomExpression != null)
             {
-                ExtractCustomClipNames();
+                _customClipNames = ExtractCustomClipNames();
                 for (int i = 0; i < _customClipNames.Length; i++)
                 {
                     if (_customClipNames[i] == TargetClip._template.CustomExpression.name)
@@ -52,42 +55,9 @@ namespace VrmExpressionExtension
 
             if (TargetClip._template.Preset == ExpressionPreset.custom)
             {
-                if (TargetClip.VrmObjectExpression == null)
-                {
-                    EditorGUILayout.HelpBox(
-                        "No VRM Object Expression found. Please assign a VRM Object Expression to this clip.",
-                        MessageType.Error);
-                }
-                else if (!_hasCustomClip)
-                {
-                    EditorGUILayout.HelpBox(
-                        "No custom clips found in the VRM Object Expression. ",
-                        MessageType.Warning);
-                }
-                else
-                {
-                    EditorGUI.indentLevel++;
-
-                    ExtractCustomClipNames();
-                    int selected = EditorGUILayout.Popup(
-                        label: new GUIContent("Custom Expression"),
-                        selectedIndex: _selectedCustomClipIndex,
-                        displayedOptions: _customClipNames
-                    );
-
-                    if (selected != _selectedCustomClipIndex)
-                    {
-                        _selectedCustomClipIndex = selected;
-                        OnCustomClipChanged(TargetClip.VrmObjectExpression.CustomClips[_selectedCustomClipIndex]);
-                    }
-
-                    using (new EditorGUI.DisabledScope(true))
-                    {
-                        EditorGUILayout.PropertyField(_customExpression, new GUIContent("Reference"));
-                    }
-
-                    EditorGUI.indentLevel--;
-                }
+                EditorGUI.indentLevel++;
+                CustomClipGUI();
+                EditorGUI.indentLevel--;
             }
 
             using (var change = new EditorGUI.ChangeCheckScope())
@@ -97,14 +67,70 @@ namespace VrmExpressionExtension
             }
         }
 
-        private void ExtractCustomClipNames()
+        private void CustomClipGUI()
         {
+            var disabled = false;
+            if (TargetClip.VrmObjectExpression == null)
+            {
+                EditorGUILayout.HelpBox(
+                    "No VRM Object found. Please assign a VRM Object to this clip.",
+                    MessageType.Error);
+                disabled = true;
+            }
+            else if (!HasCustomClip)
+            {
+                EditorGUILayout.HelpBox(
+                    "No custom clips found in the VRM Object Expression. ",
+                    MessageType.Warning);
+                disabled = true;
+            }
+            else if (_selectedCustomClipIndex == -1 && TargetClip._template.CustomExpression != null)
+            {
+                EditorGUILayout.HelpBox(
+                    "Serialized custom clip not found in the current VRM object's expressions, or the binding information may be outdated. " +
+                    "Please move the seek bar to refresh and update the binding info.",
+                    MessageType.Warning);
+            }
+
+            _customClipNames = ExtractCustomClipNames();
+
+            using (new EditorGUI.DisabledScope(disabled))
+            {
+                int selected = EditorGUILayout.Popup(
+                    label: new GUIContent("Selected custom clip"),
+                    selectedIndex: _selectedCustomClipIndex,
+                    displayedOptions: _customClipNames
+                );
+
+                if (selected != _selectedCustomClipIndex)
+                {
+                    _selectedCustomClipIndex = selected;
+                    string clipName = _customClipNames[_selectedCustomClipIndex];
+                    // VrmObjectExpressionがnullになるケースでは、disabled = true になるので、nullチェックは不要 
+                    VRM10Expression selectedClip =
+                        TargetClip.VrmObjectExpression!.CustomClips.Find(clip => clip.name == clipName);
+                    OnCustomClipChanged(selectedClip);
+                }
+
+                using (new EditorGUI.DisabledScope(true))
+                {
+                    EditorGUILayout.PropertyField(_customExpression, new GUIContent("Clip reference"));
+                }
+            }
+        }
+
+        private string[] ExtractCustomClipNames()
+        {
+            if (TargetClip.VrmObjectExpression == null) return Array.Empty<string>();
+
             List<VRM10Expression> clips = TargetClip.VrmObjectExpression.CustomClips;
-            _customClipNames = new string[clips.Count];
+            var customClipNames = new string[clips.Count];
             for (int i = 0; i < clips.Count; i++)
             {
-                _customClipNames[i] = clips[i].name;
+                customClipNames[i] = clips[i].name;
             }
+
+            return customClipNames;
         }
 
         private void OnCustomClipChanged(VRM10Expression expression)
