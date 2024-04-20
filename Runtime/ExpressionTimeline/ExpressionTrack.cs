@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -20,13 +21,13 @@ namespace VrmExpressionExtension
             ExpressionTrack baseTrack = parent.GetType() == typeof(ExpressionTrack) ? parent as ExpressionTrack : this;
 
             var bindingVrmInstance = GetBindingComponent<Vrm10Instance>(baseTrack, go);
-            // rename clip to preset name
+
             foreach (TimelineClip clip in GetClips())
             {
-                RenameClip(clip);
                 var asset = clip.asset as ExpressionClip;
-                if (asset == null || bindingVrmInstance == null) continue;
-                asset.VrmObjectExpression = bindingVrmInstance.Vrm.Expression;
+                if (asset == null) continue;
+
+                asset.VrmObjectExpression = bindingVrmInstance == null ? null : bindingVrmInstance.Vrm.Expression;
             }
 
             return mixer;
@@ -54,13 +55,6 @@ namespace VrmExpressionExtension
                 { } component => component,
                 _ => default
             };
-        }
-
-        private static void RenameClip(TimelineClip clip)
-        {
-            var asset = clip.asset as ExpressionClip;
-            if (asset == null) return;
-            clip.displayName = asset._template.Preset + " ( " + asset._template.Weight + " )";
         }
     }
 }

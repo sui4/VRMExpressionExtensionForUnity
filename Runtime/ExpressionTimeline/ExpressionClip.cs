@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -16,6 +17,11 @@ namespace VrmExpressionExtension
             ScriptPlayable<ExpressionBehaviour> playable = ScriptPlayable<ExpressionBehaviour>.Create(graph, _template);
             ExpressionBehaviour behaviour = playable.GetBehaviour();
             return playable;
+        }
+        
+        public string GetDisplayName()
+        {
+            return $"{_template.Preset.ToString()} ( {_template.Weight} )";
         }
     }
 }
