@@ -21,7 +21,12 @@ namespace VrmExpressionExtension
         
         public string GetDisplayName()
         {
-            return $"{_template.Preset.ToString()} ( {_template.Weight} )";
+            var typeName = _template.Preset.ToString();
+            if (_template.Preset == ExpressionPreset.custom)
+            {
+                typeName = _template.CustomExpression != null ? _template.CustomExpression.name : "custom";
+            }
+            return $"{typeName} ( {_template.Weight} )";
         }
     }
 }
